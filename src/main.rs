@@ -13,7 +13,7 @@ async fn main() {
 
     let client = reqwest::Client::builder().http1_only().build().unwrap();
     let mut parent_tasks = Vec::with_capacity(128);
-    for thread_idx in 0..128 {
+    for thread_idx in 0..1024 {
         let client = &client;
         parent_tasks.push( async move {
             sleep(Duration::from_millis(1)).await;
@@ -36,7 +36,7 @@ async fn main() {
     let mut stream = stream::iter(parent_tasks)
         .buffered(8)
         .flatten()
-        .buffered(200);
+        .buffered(500);
     while let Some(res) = stream.next().await {
         counter += 1;
         match res {
