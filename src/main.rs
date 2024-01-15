@@ -13,11 +13,11 @@ async fn main() {
 
     let client = reqwest::Client::builder().http1_only().build().unwrap();
     let mut parent_tasks = Vec::with_capacity(1024);
-    for thread_idx in 0..1024 {
+    for thread_idx in 0..8096 {
         let client = &client;
         parent_tasks.push( async move {
             sleep(Duration::from_millis(1)).await;
-            stream::iter(0..128).map(move |run_idx| {
+            stream::iter(0..16).map(move |run_idx| {
                 let idx = thread_idx * 128 + run_idx;
                 let start = CHUNK_SIZE * idx;
                 let end = start + CHUNK_SIZE;
