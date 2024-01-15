@@ -18,7 +18,7 @@ async fn main() {
         parent_tasks.push( async move {
             sleep(Duration::from_millis(1)).await;
             stream::iter(0..16).map(move |run_idx| {
-                let idx = thread_idx * 128 + run_idx;
+                let idx = thread_idx * 16 + run_idx;
                 let start = CHUNK_SIZE * idx;
                 let end = start + CHUNK_SIZE;
                 let range = format!("bytes={}-{}", start, end);
@@ -34,7 +34,7 @@ async fn main() {
 
     let mut counter = 0;
     let mut stream = stream::iter(parent_tasks)
-        .buffered(8)
+        .buffered(32)
         .flatten()
         .buffered(500);
     while let Some(res) = stream.next().await {
