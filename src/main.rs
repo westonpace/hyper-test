@@ -36,7 +36,7 @@ async fn main() {
     let mut stream = stream::iter(parent_tasks)
         .buffered(8)
         .flatten()
-        .buffered(8);
+        .buffered(200);
     while let Some(res) = stream.next().await {
         counter += 1;
         match res {
