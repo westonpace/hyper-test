@@ -12,7 +12,7 @@ async fn main() {
     console_subscriber::init();
 
     let client = reqwest::Client::builder().http1_only().build().unwrap();
-    let mut parent_tasks = Vec::with_capacity(128);
+    let mut parent_tasks = Vec::with_capacity(1024);
     for thread_idx in 0..1024 {
         let client = &client;
         parent_tasks.push( async move {
