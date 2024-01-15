@@ -26,7 +26,8 @@ async fn main() {
                     client
                     .get("https://storage.googleapis.com/weston-public-test/weston/data/d3144d84-b8e5-4b9a-bc19-9ca64dabe0fd.lance")
                     .header("Range", range).send().and_then(|rsp| rsp.bytes().and_then(|bytes| std::future::ready(Ok(bytes.len()))));
-                tokio::task::spawn(fut)
+                let task = tokio::task::spawn(fut);
+                async move { task.await.unwrap() }
             })
         });
     }
@@ -38,7 +39,7 @@ async fn main() {
         .buffered(8);
     while let Some(res) = stream.next().await {
         counter += 1;
-        match res.unwrap() {
+        match res {
             Ok(bytes_received) => {
                 println!("{}: Downloaded {} bytes", counter, bytes_received);
             }
